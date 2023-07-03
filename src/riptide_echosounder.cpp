@@ -151,6 +151,7 @@ void RiptideEchosounder::read_callback(const rtac::asio::SerialStream::ErrorCode
                 publish_range(raw_publisher_, raw_distance);
                 publish_range(processed_publisher_, processed_distance);
             }
+            RCLCPP_WARN(this->get_logger(), "Gathered distances: %f, %f", raw_distance, processed_distance);
         }
         else {
             RCLCPP_WARN(this->get_logger(), "Invalid frame %s", data.c_str());
