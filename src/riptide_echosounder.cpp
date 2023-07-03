@@ -140,7 +140,7 @@ void RiptideEchosounder::read_callback(const rtac::asio::SerialStream::ErrorCode
     std::string s = read_buffer_.substr(0, count); 
 
     try {
-        RCLCPP_DEBUG(this->get_logger(), "Buffer: %s", s.c_str());
+        RCLCPP_DEBUG(this->get_logger(), "Read %ld chars: %s", count, s.c_str());
         SeaScanEcho::Reply s(s);
         if (s.Valid()) {
             std::vector<std::string> fields = s.Fields();
@@ -153,7 +153,7 @@ void RiptideEchosounder::read_callback(const rtac::asio::SerialStream::ErrorCode
             }
         }
         else {
-            RCLCPP_WARN(this->get_logger(), "Invalid frame %s", (read_buffer_).c_str());
+            RCLCPP_WARN(this->get_logger(), "Invalid frame %s", s.c_str());
         }
     }
     catch (...) {
