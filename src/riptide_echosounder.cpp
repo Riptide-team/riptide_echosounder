@@ -134,7 +134,7 @@ void RiptideEchosounder::configure_echosounder() {
     std::this_thread::sleep_for(100ms);
 
     // RANGE
-    std::string range = this->get_parameter("threshold").as_string();
+    std::string range = this->get_parameter("range").as_string();
     SeaScanEcho::Command range_command = SeaScanEcho::Command({"MSALT", "RANGE", range});
     command = range_command();
     count = serial_->write(command.size(), (const uint8_t*)command.c_str());
