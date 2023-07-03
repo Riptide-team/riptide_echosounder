@@ -148,6 +148,11 @@ void RiptideEchosounder::read_callback(const rtac::asio::SerialStream::ErrorCode
         }
         std::cout << std::endl;
 
+        for (std::size_t i=0; i<count; ++i) {
+            std::cout << "[" << int((corrected.c_str())[i]) <<"]";
+        }
+        std::cout << std::endl;
+
 
         if (s.Valid()) {
             std::vector<std::string> fields = s.Fields();
