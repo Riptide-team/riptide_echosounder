@@ -137,11 +137,11 @@ void RiptideEchosounder::read_callback(const rtac::asio::SerialStream::ErrorCode
         RCLCPP_WARN(this->get_logger(), "Error while serial reading: %s", (err.message()).c_str());
     }
 
-    std::string s = read_buffer_.substr(0, count); 
+    std::string data = read_buffer_.substr(0, count); 
 
     try {
-        RCLCPP_DEBUG(this->get_logger(), "Read %ld chars: %s", count, s.c_str());
-        SeaScanEcho::Reply s(s);
+        RCLCPP_DEBUG(this->get_logger(), "Read %ld chars: %s", count, data.c_str());
+        SeaScanEcho::Reply s(data);
         if (s.Valid()) {
             std::vector<std::string> fields = s.Fields();
             if ((fields.size() == 4) and (fields[0] == "MSALT") and (fields[1] == "DATA")) {
@@ -153,11 +153,11 @@ void RiptideEchosounder::read_callback(const rtac::asio::SerialStream::ErrorCode
             }
         }
         else {
-            RCLCPP_WARN(this->get_logger(), "Invalid frame %s", s.c_str());
+            RCLCPP_WARN(this->get_logger(), "Invalid frame %s", data.c_str());
         }
     }
     catch (...) {
-        RCLCPP_WARN(this->get_logger(), "Error while parsing reply %s", (read_buffer_).c_str());
+        RCLCPP_WARN(this->get_logger(), "Error while parsing reply %s", (data).c_str());
     }
 
     read_buffer_ = std::string(1024, '\0');
