@@ -137,9 +137,11 @@ void RiptideEchosounder::read_callback(const rtac::asio::SerialStream::ErrorCode
         RCLCPP_WARN(this->get_logger(), "Error while serial reading: %s", (err.message()).c_str());
     }
 
+    std::string corrected = read_buffer.substr(0, count-2) + "\r\n";
+
     try {
-        RCLCPP_DEBUG(this->get_logger(), "Read %ld chars: %s", count, read_buffer_.c_str());
-        SeaScanEcho::Reply s(read_buffer_);
+        RCLCPP_DEBUG(this->get_logger(), "Read %ld chars: %s", count, corrected.c_str());
+        SeaScanEcho::Reply s(corrected);
 
         for (std::size_t i=0; i<count; ++i) {
             std::cout << "[" << int((read_buffer_.c_str())[i]) <<"]";
@@ -164,7 +166,7 @@ void RiptideEchosounder::read_callback(const rtac::asio::SerialStream::ErrorCode
         }
     }
     catch (...) {
-        RCLCPP_WARN(this->get_logger(), "Error while parsing reply %s", read_buffer_.c_str());
+        RCLCPP_WARN(this->get_logger(), "Error while parsing reply %s", corrected.c_str());
     }
 
     read_buffer_ = std::string(1024, '\0');
