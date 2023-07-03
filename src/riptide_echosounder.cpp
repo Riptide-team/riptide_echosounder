@@ -98,8 +98,8 @@ void RiptideEchosounder::configure_echosounder() {
     std::this_thread::sleep_for(10ms);
 
     // Speed of sound
-    std::string sos = this->get_parameter("speed_of_sound").as_string();
-    SeaScanEcho::Command sos_command = SeaScanEcho::Command({"MSALT", "SOS", sos});
+    std::string sos = this->get_parameter("speed_of_sound").as_double();
+    SeaScanEcho::Command sos_command = SeaScanEcho::Command({"MSALT", "SOS", std::to_string(sos)});
     command = sos_command();
     count = serial_->write(command.size(), (const uint8_t*)command.c_str());
     RCLCPP_DEBUG(this->get_logger(), "SOS message witten! %d/%ld char written", count, command.size());
@@ -107,8 +107,8 @@ void RiptideEchosounder::configure_echosounder() {
     std::this_thread::sleep_for(10ms);
 
     // Filter
-    std::string filter = this->get_parameter("filter_size").as_string();
-    SeaScanEcho::Command filter_command = SeaScanEcho::Command({"MSALT", "FILTER", filter});
+    std::string filter = this->get_parameter("filter_size").as_int();
+    SeaScanEcho::Command filter_command = SeaScanEcho::Command({"MSALT", "FILTER", std::to_string(filter)});
     command = filter_command();
     count = serial_->write(command.size(), (const uint8_t*)command.c_str());
     RCLCPP_DEBUG(this->get_logger(), "FILTER message witten! %d/%ld char written", count, command.size());
@@ -116,8 +116,8 @@ void RiptideEchosounder::configure_echosounder() {
     std::this_thread::sleep_for(10ms);
 
     // LOCKOUT
-    std::string lockout = this->get_parameter("lockout").as_string();
-    SeaScanEcho::Command lockout_command = SeaScanEcho::Command({"MSALT", "LOCKOUT", lockout});
+    std::string lockout = this->get_parameter("lockout").as_double();
+    SeaScanEcho::Command lockout_command = SeaScanEcho::Command({"MSALT", "LOCKOUT", std::to_string(lockout)});
     command = lockout_command();
     count = serial_->write(command.size(), (const uint8_t*)command.c_str());
     RCLCPP_DEBUG(this->get_logger(), "LOCKOUT message witten! %d/%ld char written", count, command.size());
@@ -125,8 +125,8 @@ void RiptideEchosounder::configure_echosounder() {
     std::this_thread::sleep_for(10ms);
 
     // THRESHOLD
-    std::string threshold = this->get_parameter("threshold").as_string();
-    SeaScanEcho::Command threshold_command = SeaScanEcho::Command({"MSALT", "THRESHOLD", threshold});
+    std::string threshold = this->get_parameter("threshold").as_int();
+    SeaScanEcho::Command threshold_command = SeaScanEcho::Command({"MSALT", "THRESHOLD", std::to_string(threshold)});
     command = threshold_command();
     count = serial_->write(command.size(), (const uint8_t*)command.c_str());
     RCLCPP_DEBUG(this->get_logger(), "THRESHOLD message witten! %d/%ld char written", count, command.size());
@@ -134,8 +134,8 @@ void RiptideEchosounder::configure_echosounder() {
     std::this_thread::sleep_for(10ms);
 
     // RANGE
-    std::string range = this->get_parameter("threshold").as_string();
-    SeaScanEcho::Command range_command = SeaScanEcho::Command({"MSALT", "RANGE", range});
+    std::string range = this->get_parameter("range").as_double();
+    SeaScanEcho::Command range_command = SeaScanEcho::Command({"MSALT", "RANGE", std::to_string(range)});
     command = range_command();
     count = serial_->write(command.size(), (const uint8_t*)command.c_str());
     RCLCPP_DEBUG(this->get_logger(), "RANGE message witten! %d/%ld char written", count, command.size());
