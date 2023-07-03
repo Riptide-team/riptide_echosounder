@@ -70,16 +70,6 @@ RiptideEchosounder::RiptideEchosounder() : Node("riptide_echosounder") {
 
     raw_publisher_ = this->create_publisher<sensor_msgs::msg::Range>("raw_altitude", 10);
     processed_publisher_ = this->create_publisher<sensor_msgs::msg::Range>("processed_altitude", 10);
-
-    // SeaScanEcho::Reply s_reset(data.substr(0, count));
-    // std::vector<std::string> fields = s_reset.Fields();
-    // if (!s_reset.Valid() && fields[0] != "MSALT" && fields[1] != "INFO") {
-    //     RCLCPP_FATAL(
-    //         rclcpp::get_logger("EchosounderHardware"),
-    //         "Bad response to RESET: '%s' : got %s, %s", (data.substr(0, count)).c_str(), (std::string(fields[0])).c_str(), (std::string(fields[1])).c_str()
-    //     );
-    //     return hardware_interface::CallbackReturn::ERROR;
-    // }
 }
 
 void RiptideEchosounder::configure_echosounder() {
@@ -195,4 +185,12 @@ void RiptideEchosounder::publish_range(rclcpp::Publisher<sensor_msgs::msg::Range
     range.range = distance;
 
     publisher->publish(range);
+}
+
+void RiptideEchosounder::stop_measurements() {
+    // Launch continuous measurements
+    SeaScanEcho::Command trigger_command = SeaScanEcho::Command({"MSALT", "TRIGGER", "0"});
+    std::string command = trigger_command();
+    int count = serial_->write(command.size(), (const uint8_t*)command.c_str());
+    RCLCPP_DEBUG(rclcpp::get_logger("EchosounderHardware"), "TRIGGER message witten! %d/%ld char written", count, command.size());
 }

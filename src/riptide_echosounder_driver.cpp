@@ -3,7 +3,9 @@
 
 int main(int argc, char * argv[]) {
     rclcpp::init(argc, argv);
-    rclcpp::spin(std::make_shared<RiptideEchosounder>());
+    auto echosounder_node = std::make_shared<RiptideEchosounder>();
+    rclcpp::spin(echosounder_node);
+    rclcpp::on_shutdown(std::bind(&RiptideEchosounder::stop_measurements, echosounder_node));
     rclcpp::shutdown();
     return 0;
 }
