@@ -95,7 +95,7 @@ void RiptideEchosounder::configure_echosounder() {
     count = serial_->write(command.size(), (const uint8_t*)command.c_str());
     RCLCPP_DEBUG(this->get_logger(), "RESET message witten! %d/%ld char written", count, command.size());
 
-    std::this_thread::sleep_for(10ms);
+    std::this_thread::sleep_for(100ms);
 
     // Speed of sound
     std::string sos = this->get_parameter("speed_of_sound").as_string();
@@ -104,7 +104,7 @@ void RiptideEchosounder::configure_echosounder() {
     count = serial_->write(command.size(), (const uint8_t*)command.c_str());
     RCLCPP_DEBUG(this->get_logger(), "SOS message witten! %d/%ld char written", count, command.size());
     
-    std::this_thread::sleep_for(10ms);
+    std::this_thread::sleep_for(100ms);
 
     // Filter
     std::string filter = this->get_parameter("filter_size").as_string();
@@ -113,7 +113,7 @@ void RiptideEchosounder::configure_echosounder() {
     count = serial_->write(command.size(), (const uint8_t*)command.c_str());
     RCLCPP_DEBUG(this->get_logger(), "FILTER message witten! %d/%ld char written", count, command.size());
     
-    std::this_thread::sleep_for(10ms);
+    std::this_thread::sleep_for(100ms);
 
     // LOCKOUT
     std::string lockout = this->get_parameter("lockout").as_string();
@@ -122,7 +122,7 @@ void RiptideEchosounder::configure_echosounder() {
     count = serial_->write(command.size(), (const uint8_t*)command.c_str());
     RCLCPP_DEBUG(this->get_logger(), "LOCKOUT message witten! %d/%ld char written", count, command.size());
     
-    std::this_thread::sleep_for(10ms);
+    std::this_thread::sleep_for(100ms);
 
     // THRESHOLD
     std::string threshold = this->get_parameter("threshold").as_string();
@@ -131,7 +131,7 @@ void RiptideEchosounder::configure_echosounder() {
     count = serial_->write(command.size(), (const uint8_t*)command.c_str());
     RCLCPP_DEBUG(this->get_logger(), "THRESHOLD message witten! %d/%ld char written", count, command.size());
     
-    std::this_thread::sleep_for(10ms);
+    std::this_thread::sleep_for(100ms);
 
     // RANGE
     std::string range = this->get_parameter("threshold").as_string();
@@ -140,7 +140,7 @@ void RiptideEchosounder::configure_echosounder() {
     count = serial_->write(command.size(), (const uint8_t*)command.c_str());
     RCLCPP_DEBUG(this->get_logger(), "RANGE message witten! %d/%ld char written", count, command.size());
     
-    std::this_thread::sleep_for(10ms);
+    std::this_thread::sleep_for(100ms);
 }
 
 void RiptideEchosounder::read_callback(const rtac::asio::SerialStream::ErrorCode& err, std::size_t /*count*/) {
