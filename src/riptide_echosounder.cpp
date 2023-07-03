@@ -21,8 +21,8 @@ RiptideEchosounder::RiptideEchosounder() : Node("riptide_echosounder") {
     this->declare_parameter("baud_rate", 38400);
 
     // Echosounder parameters
-    this->declare_parameter("speed_of_sound", "1481.");
-    this->declare_parameter("range", "15."); // 1 - 120
+    this->declare_parameter("speed_of_sound", "1481");
+    this->declare_parameter("range", "15"); // 1 - 120
     this->declare_parameter("filter_size", "10"); // 1 - 32
     this->declare_parameter("threshold", "89"); // 0 - 255
     this->declare_parameter("lockout", "0.5"); // min 0.5
