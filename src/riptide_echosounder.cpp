@@ -143,7 +143,7 @@ void RiptideEchosounder::read_callback(const rtac::asio::SerialStream::ErrorCode
 
     try {
         RCLCPP_DEBUG(this->get_logger(), "Read %ld chars: %s", count, (read_buffer_.substr(0, count)).c_str());
-        SeaScanEcho::Reply s(data);
+        SeaScanEcho::Reply s(read_buffer_);
         if (s.Valid()) {
             std::vector<std::string> fields = s.Fields();
             if ((fields.size() == 4) and (fields[0] == "MSALT") and (fields[1] == "DATA")) {
@@ -154,6 +154,7 @@ void RiptideEchosounder::read_callback(const rtac::asio::SerialStream::ErrorCode
                 publish_range(processed_publisher_, processed_distance);
                 RCLCPP_DEBUG(this->get_logger(), "Gathered distances: %f, %f", raw_distance, processed_distance);
             }
+            RCLCPP_DEBUG(this->get_logger(), "Valid NMEA sentence");
         }
         else {
             RCLCPP_WARN(this->get_logger(), "Invalid frame %s", data.c_str());
