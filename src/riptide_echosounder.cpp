@@ -90,10 +90,10 @@ void RiptideEchosounder::configure_echosounder() {
     int count;
 
     // Send RESET message
-    SeaScanEcho::Command reset_command = SeaScanEcho::Command({"MSALT", "RESET"});
-    command = reset_command();
+    SeaScanEcho::Command info_command = SeaScanEcho::Command({"MSALT", "INFO"});
+    command = info_command();
     count = serial_->write(command.size(), (const uint8_t*)command.c_str());
-    RCLCPP_DEBUG(this->get_logger(), "RESET message witten! %d/%ld char written", count, command.size());
+    RCLCPP_DEBUG(this->get_logger(), "INFO message witten! %d/%ld char written", count, command.size());
 
     std::this_thread::sleep_for(100ms);
 
