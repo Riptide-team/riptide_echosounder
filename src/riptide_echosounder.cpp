@@ -150,6 +150,7 @@ void RiptideEchosounder::read_callback(const rtac::asio::SerialStream::ErrorCode
     }
 
     try {
+        RCLCPP_INFO(this->get_logger(), "Buffer: %s", (read_buffer_).c_str());
         SeaScanEcho::Reply s(read_buffer_);
         if (s.Valid()) {
             std::vector<std::string> fields = s.Fields();
