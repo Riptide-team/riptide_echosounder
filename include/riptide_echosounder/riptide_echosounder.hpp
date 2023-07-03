@@ -16,9 +16,9 @@
 
 class RiptideEchosounder : public rclcpp::Node {
   public:
-    RiptideEchosounder();
+      RiptideEchosounder();
 
-    void stop_measurements();
+      ~RiptideEchosounder();
 
     private:
 
