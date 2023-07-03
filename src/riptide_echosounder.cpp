@@ -139,15 +139,6 @@ void RiptideEchosounder::configure_echosounder() {
     RCLCPP_DEBUG(this->get_logger(), "THRESHOLD message witten! %d/%ld char written", count, command.size());
     
     std::this_thread::sleep_for(100ms);
-
-    // THRESHOLD
-    std::string threshold = this->get_parameter("threshold").as_string();
-    SeaScanEcho::Command threshold_command = SeaScanEcho::Command({"MSALT", "THRESHOLD", threshold});
-    command = threshold_command();
-    count = serial_->write(command.size(), (const uint8_t*)command.c_str());
-    RCLCPP_DEBUG(this->get_logger(), "THRESHOLD message witten! %d/%ld char written", count, command.size());
-    
-    std::this_thread::sleep_for(100ms);
 }
 
 void RiptideEchosounder::read_callback(const rtac::asio::SerialStream::ErrorCode& err, std::size_t /*count*/) {
