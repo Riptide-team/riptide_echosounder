@@ -190,7 +190,7 @@ void RiptideEchosounder::publish_range(rclcpp::Publisher<sensor_msgs::msg::Range
     publisher->publish(range);
 }
 
-void RiptideEchosounder::~RiptideEchosounder() {
+RiptideEchosounder::~RiptideEchosounder() {
     RCLCPP_DEBUG(
         this->get_logger(),
         "TRIGGERING measurements stop!"
