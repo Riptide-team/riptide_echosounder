@@ -137,10 +137,10 @@ void RiptideEchosounder::read_callback(const rtac::asio::SerialStream::ErrorCode
         RCLCPP_WARN(this->get_logger(), "Error while serial reading: %s", (err.message()).c_str());
     }
 
-    std::string data = read_buffer_.substr(0, count-2) + "\r\n"; 
+    std::string data = read_buffer_.substr(0, count); 
 
     try {
-        RCLCPP_DEBUG(this->get_logger(), "Read %ld chars: %s", count, data.c_str());
+        RCLCPP_DEBUG(this->get_logger(), "Read %ld chars: %s", count, (read_buffer_.substr(0, count)).c_str());
         SeaScanEcho::Reply s(data);
         if (s.Valid()) {
             std::vector<std::string> fields = s.Fields();
