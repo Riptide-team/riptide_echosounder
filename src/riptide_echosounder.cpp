@@ -144,6 +144,7 @@ void RiptideEchosounder::read_callback(const rtac::asio::SerialStream::ErrorCode
         for (std::size_t i=0; i<count; ++i) {
             std::cout << "[" << int((read_buffer_.c_str())[i]) <<"]";
         }
+        std::cout << std::endl;
 
 
         if (s.Valid()) {
