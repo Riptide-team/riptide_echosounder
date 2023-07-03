@@ -60,15 +60,13 @@ RiptideEchosounder::RiptideEchosounder() : Node("riptide_echosounder") {
     configure_echosounder();
 
 
-
     // Launch continuous measurements
     SeaScanEcho::Command trigger_command = SeaScanEcho::Command({"MSALT", "TRIGGER", "2"});
     std::string command = trigger_command();
     int count = serial_->write(command.size(), (const uint8_t*)command.c_str());
-    RCLCPP_DEBUG(rclcpp::get_logger("EchosounderHardware"), "RANGE message witten! %d/%ld char written", count, command.size());
+    RCLCPP_DEBUG(rclcpp::get_logger("EchosounderHardware"), "TRIGGER message witten! %d/%ld char written", count, command.size());
 
     // TODO MSALT,TRIGGER,0 at the destruction of the node
-
 
     raw_publisher_ = this->create_publisher<sensor_msgs::msg::Range>("raw_altitude", 10);
     processed_publisher_ = this->create_publisher<sensor_msgs::msg::Range>("processed_altitude", 10);
@@ -124,6 +122,15 @@ void RiptideEchosounder::configure_echosounder() {
     
     std::this_thread::sleep_for(100ms);
 
+    // RANGE
+    std::string range = this->get_parameter("range").as_string();
+    SeaScanEcho::Command range_command = SeaScanEcho::Command({"MSALT", "RANGE", range});
+    command = range_command();
+    count = serial_->write(command.size(), (const uint8_t*)command.c_str());
+    RCLCPP_DEBUG(this->get_logger(), "RANGE message witten! %d/%ld char written", count, command.size());
+    
+    std::this_thread::sleep_for(100ms);
+
     // THRESHOLD
     std::string threshold = this->get_parameter("threshold").as_string();
     SeaScanEcho::Command threshold_command = SeaScanEcho::Command({"MSALT", "THRESHOLD", threshold});
@@ -133,12 +140,12 @@ void RiptideEchosounder::configure_echosounder() {
     
     std::this_thread::sleep_for(100ms);
 
-    // RANGE
-    std::string range = this->get_parameter("range").as_string();
-    SeaScanEcho::Command range_command = SeaScanEcho::Command({"MSALT", "RANGE", range});
-    command = range_command();
+    // THRESHOLD
+    std::string threshold = this->get_parameter("threshold").as_string();
+    SeaScanEcho::Command threshold_command = SeaScanEcho::Command({"MSALT", "THRESHOLD", threshold});
+    command = threshold_command();
     count = serial_->write(command.size(), (const uint8_t*)command.c_str());
-    RCLCPP_DEBUG(this->get_logger(), "RANGE message witten! %d/%ld char written", count, command.size());
+    RCLCPP_DEBUG(this->get_logger(), "THRESHOLD message witten! %d/%ld char written", count, command.size());
     
     std::this_thread::sleep_for(100ms);
 }
