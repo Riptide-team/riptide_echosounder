@@ -131,15 +131,17 @@ void RiptideEchosounder::configure_echosounder() {
     std::this_thread::sleep_for(100ms);
 }
 
-void RiptideEchosounder::read_callback(const rtac::asio::SerialStream::ErrorCode& err, std::size_t /*count*/) {
+void RiptideEchosounder::read_callback(const rtac::asio::SerialStream::ErrorCode& err, std::size_t count) {
     // Serial error reading
     if (err) {
         RCLCPP_WARN(this->get_logger(), "Error while serial reading: %s", (err.message()).c_str());
     }
 
+    std::string s = read_buffer_.substr(0, count); 
+
     try {
-        RCLCPP_DEBUG(this->get_logger(), "Buffer: %s", (read_buffer_).c_str());
-        SeaScanEcho::Reply s(read_buffer_);
+        RCLCPP_DEBUG(this->get_logger(), "Buffer: %s", s.c_str());
+        SeaScanEcho::Reply s(s);
         if (s.Valid()) {
             std::vector<std::string> fields = s.Fields();
             if ((fields.size() == 4) and (fields[0] == "MSALT") and (fields[1] == "DATA")) {
