@@ -190,9 +190,14 @@ void RiptideEchosounder::publish_range(rclcpp::Publisher<sensor_msgs::msg::Range
 }
 
 void RiptideEchosounder::stop_measurements() {
+    RCLCPP_DEBUG(
+        this->get_logger(),
+        "TRIGGERING measurements stop!"
+    );
+
     // Launch continuous measurements
     SeaScanEcho::Command trigger_command = SeaScanEcho::Command({"MSALT", "TRIGGER", "0"});
     std::string command = trigger_command();
     int count = serial_->write(command.size(), (const uint8_t*)command.c_str());
-    RCLCPP_DEBUG(rclcpp::get_logger("EchosounderHardware"), "TRIGGER message witten! %d/%ld char written", count, command.size());
+    RCLCPP_DEBUG(this->get_logger(), "TRIGGER message witten! %d/%ld char written", count, command.size());
 }
