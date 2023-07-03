@@ -151,7 +151,7 @@ void RiptideEchosounder::read_callback(const rtac::asio::SerialStream::ErrorCode
 
         if (s.Valid()) {
             std::vector<std::string> fields = s.Fields();
-            if ((fields.size() == 4) and (fields[0] == "MSALT") and (fields[1] == "DATA")) {
+            if ((fields.size() == 4) and (fields[0] == "$MSALT") and (fields[1] == "DATA")) {
                 double raw_distance = std::stod(fields[2]);
                 double processed_distance = std::stod(fields[3]);
 
