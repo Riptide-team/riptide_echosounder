@@ -26,7 +26,7 @@ target_link_libraries(riptide_echosounder rtac_asio sea_scan_echo_driver)
 ament_target_dependencies(riptide_echosounder rclcpp sensor_msgs)
 
 # Compiling riptide echosounder driver
-add_library(riptide_echosounder_driver src/riptide_echosounder_driver.cpp)
+add_executable(riptide_echosounder_driver src/riptide_echosounder_driver.cpp)
 target_link_libraries(riptide_echosounder_driver PRIVATE riptide_echosounder)
 
 install(TARGETS
