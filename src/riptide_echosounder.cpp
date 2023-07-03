@@ -47,7 +47,7 @@ RiptideEchosounder::RiptideEchosounder() : Node("riptide_echosounder") {
     // Launching async read on serial port
     read_buffer_ = std::string(1024, '\0');
     if  (!serial_->async_read_until(
-            read_buffer_.size(), reinterpret_cast<std::uint8_t*>(const_cast<char*>(read_buffer_.c_str())), '\n',
+            read_buffer_.size(), reinterpret_cast<std::uint8_t*>(const_cast<char*>(read_buffer_.c_str())), '\r',
             std::bind(&RiptideEchosounder::read_callback, this, std::placeholders::_1, std::placeholders::_2))
         ) {
         RCLCPP_FATAL(
@@ -177,7 +177,7 @@ void RiptideEchosounder::read_callback(const rtac::asio::SerialStream::ErrorCode
     // Relaunching an async read
     if(!serial_->async_read_until(read_buffer_.size(),
         reinterpret_cast<std::uint8_t*>(const_cast<char*>(read_buffer_.c_str())),
-        '\n', std::bind(&RiptideEchosounder::read_callback, this, std::placeholders::_1, std::placeholders::_2)
+        '\r', std::bind(&RiptideEchosounder::read_callback, this, std::placeholders::_1, std::placeholders::_2)
         )) {
         RCLCPP_FATAL(
             this->get_logger(),
