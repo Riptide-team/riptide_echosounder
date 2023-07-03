@@ -157,7 +157,7 @@ void RiptideEchosounder::read_callback(const rtac::asio::SerialStream::ErrorCode
         }
     }
     catch (...) {
-        RCLCPP_WARN(this->get_logger(), "Error while parsing reply %s", (data).c_str());
+        RCLCPP_WARN(this->get_logger(), "Error while parsing reply %s", data.c_str());
     }
 
     read_buffer_ = std::string(1024, '\0');
