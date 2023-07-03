@@ -150,7 +150,7 @@ void RiptideEchosounder::read_callback(const rtac::asio::SerialStream::ErrorCode
 
                 publish_range(raw_publisher_, raw_distance);
                 publish_range(processed_publisher_, processed_distance);
-                RCLCPP_INFO(this->get_logger(), "Gathered distances: %f, %f", raw_distance, processed_distance);
+                RCLCPP_DEBUG(this->get_logger(), "Gathered distances: %f, %f", raw_distance, processed_distance);
             }
         }
         else {
