@@ -143,10 +143,14 @@ void RiptideEchosounder::read_callback(const rtac::asio::SerialStream::ErrorCode
         RCLCPP_DEBUG(this->get_logger(), "Read %ld chars: %s", count, read_buffer_.c_str());
         SeaScanEcho::Reply s(read_buffer_);
 
-        for (const auto &f: s.Fields()) {
-            std::cout << f << " ";
+        // for (const auto &f: s.Fields()) {
+        //     std::cout << f << " ";
+        // }
+        // std::cout << std::endl;
+
+        for (std::size_t i=0; i<count; ++i) {
+            std::cout << "[" << int((read_buffer_.c_str())[i]) <<"]";
         }
-        std::cout << std::endl;
 
 
         if (s.Valid()) {
