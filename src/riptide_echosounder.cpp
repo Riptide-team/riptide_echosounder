@@ -144,7 +144,7 @@ void RiptideEchosounder::read_callback(const rtac::asio::SerialStream::ErrorCode
         SeaScanEcho::Reply s(read_buffer_);
 
         for (const auto &f: s.Fields()) {
-            std::cout << f;
+            std::cout << f << " ";
         }
         std::cout << std::endl;
 
@@ -162,7 +162,7 @@ void RiptideEchosounder::read_callback(const rtac::asio::SerialStream::ErrorCode
             RCLCPP_DEBUG(this->get_logger(), "Valid NMEA sentence");
         }
         else {
-            RCLCPP_WARN(this->get_logger(), "Invalid NMEA sentance %s", read_buffer_.c_str());
+            RCLCPP_WARN(this->get_logger(), "Invalid NMEA sentance");
         }
     }
     catch (...) {
