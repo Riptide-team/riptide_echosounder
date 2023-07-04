@@ -28,7 +28,7 @@ RiptideEchosounder::RiptideEchosounder() : Node("riptide_echosounder") {
     this->declare_parameter("lockout", "0.5"); // min 0.5
 
     // Getting serial parameters
-    port_ = this->get_parameter("port").as_int();
+    port_ = this->get_parameter("port").as_string();
     baud_rate_ = static_cast<unsigned int>(this->get_parameter("baud_rate").as_int());
 
     // Creating driver
@@ -224,8 +224,8 @@ void RiptideEchosounder::publish_range(rclcpp::Publisher<sensor_msgs::msg::Range
 
     // Filling the message
     range.field_of_view = 0.2;
-    range.min_range = this->get_parameter("lockout").as_double();
-    range.max_range = this->get_parameter("range").as_double();
+    range.min_range = std::strod(this->get_parameter("lockout").as_string());
+    range.max_range = std::stod(this->get_parameter("range").as_string());
     range.range = distance;
 
     publisher->publish(range);
