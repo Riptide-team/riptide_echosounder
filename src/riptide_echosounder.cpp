@@ -141,25 +141,19 @@ void RiptideEchosounder::read_callback(const rtac::asio::SerialStream::ErrorCode
 
     std::string corrected = read_buffer_.substr(0, count-2) + "\r\n";
 
-    try {
+    RCLCPP_DEBUG(this->get_logger(), "Read %ld chars: %s", count, corrected.c_str());
 
-
-
-        RCLCPP_DEBUG(this->get_logger(), "Read %ld chars: %s", count, corrected.c_str());
-
-        // Adding received data to the nmea parser
-        for (std::size_t i = 0; i < count; ++i){
-            try {
-                parser.readByte(read_buffer_[i]);
-            }
-            catch (nmea::NMEAParseError& e){
-                RCLCPP_WARN(
-                    rclcpp::get_logger("TailHardware"),
-                    "Error while parsing NMEA data (%s)!", (e.what()).c_str()
-                );
-            }
+    // Adding received data to the nmea parser
+    for (std::size_t i = 0; i < count; ++i){
+        try {
+            parser.readByte(read_buffer_[i]);
         }
-
+        catch (nmea::NMEAParseError& e){
+            RCLCPP_WARN(this->get_logger(),
+                "Error while parsing NMEA data (%s)!", (e.what()).c_str()
+            );
+        }
+    }
 
         // SeaScanEcho::Reply s(corrected);
 
@@ -211,13 +205,13 @@ void RiptideEchosounder::read_callback(const rtac::asio::SerialStream::ErrorCode
 
 void RiptideEchosounder::MSALT_handler(const nmea::NMEASentence& n) {
     if (n.parameters.size() == 3 and n.parameters[0] == "DATA") {
-        RCLCPP_DEBUG(this->get_logger(), "Got DATA: %f, %f", raw_distance, processed_distance);
-
         double raw_distance = std::stod(fields[2]);
         double processed_distance = std::stod(fields[3]);
 
         publish_range(raw_publisher_, raw_distance);
         publish_range(processed_publisher_, processed_distance);
+
+        RCLCPP_DEBUG(this->get_logger(), "Got DATA: %f, %f", raw_distance, processed_distance);
     }
 }
 
