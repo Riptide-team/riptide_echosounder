@@ -60,7 +60,7 @@ RiptideEchosounder::RiptideEchosounder() : Node("riptide_echosounder") {
     configure_echosounder();
 
     // Configure parser hadnler for MSALT
-    parser.setSentenceHandler("MSALT", std::bind(&TailHardware::MSALT_handler, this, std::placeholders::_1));
+    parser.setSentenceHandler("MSALT", std::bind(&RiptideEchosounder::MSALT_handler, this, std::placeholders::_1));
 
     // Launch continuous measurements
     SeaScanEcho::Command trigger_command = SeaScanEcho::Command({"MSALT", "TRIGGER", "2"});
@@ -205,8 +205,8 @@ void RiptideEchosounder::read_callback(const rtac::asio::SerialStream::ErrorCode
 
 void RiptideEchosounder::MSALT_handler(const nmea::NMEASentence& n) {
     if (n.parameters.size() == 3 and n.parameters[0] == "DATA") {
-        double raw_distance = std::stod(fields[2]);
-        double processed_distance = std::stod(fields[3]);
+        double raw_distance = std::stod(n.parameters[1]);
+        double processed_distance = std::stod(n.parameters[2]);
 
         publish_range(raw_publisher_, raw_distance);
         publish_range(processed_publisher_, processed_distance);
