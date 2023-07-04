@@ -13,6 +13,8 @@
 
 #include <string>
 
+#include <nmeaparse/nmea.h>
+
 
 class RiptideEchosounder : public rclcpp::Node {
   public:
@@ -45,5 +47,11 @@ class RiptideEchosounder : public rclcpp::Node {
 
         rclcpp::Publisher<sensor_msgs::msg::Range>::SharedPtr raw_publisher_;
         rclcpp::Publisher<sensor_msgs::msg::Range>::SharedPtr processed_publisher_;
+
+        // NMEA parser
+        nmea::NMEAParser parser;
+
+        // MSALT handler
+        void MSALT_handler(const nmea::NMEASentence& n);
 };
 

@@ -18,11 +18,14 @@ FetchContent_MakeAvailable(sea_scan_echo_driver)
 FetchContent_Declare(rtac_asio GIT_REPOSITORY https://github.com/pnarvor/rtac_asio.git GIT_TAG master)
 FetchContent_MakeAvailable(rtac_asio)
 
+FetchContent_Declare(NemaTode GIT_REPOSITORY https://github.com/ckgt/NemaTode.git GIT_TAG master)
+FetchContent_MakeAvailable(NemaTode)
+
 include_directories(include)
 
 # Compiling riptide echosounder library
 add_library(riptide_echosounder src/riptide_echosounder.cpp)
-target_link_libraries(riptide_echosounder rtac_asio sea_scan_echo_driver)
+target_link_libraries(riptide_echosounder rtac_asio sea_scan_echo_driver NemaTode)
 ament_target_dependencies(riptide_echosounder rclcpp sensor_msgs)
 
 # Compiling riptide echosounder driver

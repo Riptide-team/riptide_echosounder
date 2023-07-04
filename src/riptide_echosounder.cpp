@@ -59,6 +59,8 @@ RiptideEchosounder::RiptideEchosounder() : Node("riptide_echosounder") {
     // Configure echosounder
     configure_echosounder();
 
+    // Configure parser hadnler for MSALT
+    parser.setSentenceHandler("MSALT", std::bind(&TailHardware::MSALT_handler, this, std::placeholders::_1));
 
     // Launch continuous measurements
     SeaScanEcho::Command trigger_command = SeaScanEcho::Command({"MSALT", "TRIGGER", "2"});
@@ -140,39 +142,59 @@ void RiptideEchosounder::read_callback(const rtac::asio::SerialStream::ErrorCode
     std::string corrected = read_buffer_.substr(0, count-2) + "\r\n";
 
     try {
+
+
+
         RCLCPP_DEBUG(this->get_logger(), "Read %ld chars: %s", count, corrected.c_str());
-        SeaScanEcho::Reply s(corrected);
 
-        for (std::size_t i=0; i<count; ++i) {
-            std::cout << "[" << int((read_buffer_.c_str())[i]) <<"]";
-        }
-        std::cout << std::endl;
-
-        for (std::size_t i=0; i<count; ++i) {
-            std::cout << "[" << int((corrected.c_str())[i]) <<"]";
-        }
-        std::cout << std::endl;
-
-
-        if (s.Valid()) {
-            std::vector<std::string> fields = s.Fields();
-            if ((fields.size() == 4) and (fields[0] == "$MSALT") and (fields[1] == "DATA")) {
-                double raw_distance = std::stod(fields[2]);
-                double processed_distance = std::stod(fields[3]);
-
-                publish_range(raw_publisher_, raw_distance);
-                publish_range(processed_publisher_, processed_distance);
-                RCLCPP_DEBUG(this->get_logger(), "Gathered distances: %f, %f", raw_distance, processed_distance);
+        // Adding received data to the nmea parser
+        for (std::size_t i = 0; i < count; ++i){
+            try {
+                parser.readByte(read_buffer_[i]);
             }
-            RCLCPP_DEBUG(this->get_logger(), "Valid NMEA sentence");
+            catch (nmea::NMEAParseError& e){
+                RCLCPP_WARN(
+                    rclcpp::get_logger("TailHardware"),
+                    "Error while parsing NMEA data (%s)!", (e.what()).c_str()
+                );
+            }
         }
-        else {
-            RCLCPP_WARN(this->get_logger(), "Invalid NMEA sentance");
-        }
-    }
-    catch (...) {
-        RCLCPP_WARN(this->get_logger(), "Error while parsing reply %s", corrected.c_str());
-    }
+
+
+        // SeaScanEcho::Reply s(corrected);
+
+        // for (std::size_t i=0; i<count; ++i) {
+        //     std::cout << "[" << int((read_buffer_.c_str())[i]) <<"]";
+        // }
+        // std::cout << std::endl;
+
+        // for (std::size_t i=0; i<count; ++i) {
+        //     std::cout << "[" << int((corrected.c_str())[i]) <<"]";
+        // }
+        // std::cout << std::endl;
+
+
+
+
+        // if (s.Valid()) {
+        //     std::vector<std::string> fields = s.Fields();
+        //     if ((fields.size() == 4) and (fields[0] == "$MSALT") and (fields[1] == "DATA")) {
+        //         double raw_distance = std::stod(fields[2]);
+        //         double processed_distance = std::stod(fields[3]);
+
+        //         publish_range(raw_publisher_, raw_distance);
+        //         publish_range(processed_publisher_, processed_distance);
+        //         RCLCPP_DEBUG(this->get_logger(), "Gathered distances: %f, %f", raw_distance, processed_distance);
+        //     }
+        //     RCLCPP_DEBUG(this->get_logger(), "Valid NMEA sentence");
+        // }
+        // else {
+        //     RCLCPP_WARN(this->get_logger(), "Invalid NMEA sentance");
+        // }
+    // }
+    // catch (...) {
+    //     RCLCPP_WARN(this->get_logger(), "Error while parsing reply %s", corrected.c_str());
+    // }
 
     read_buffer_ = std::string(1024, '\0');
     // Relaunching an async read
@@ -184,6 +206,18 @@ void RiptideEchosounder::read_callback(const rtac::asio::SerialStream::ErrorCode
             this->get_logger(),
             "Async read until could not start !"
         );
+    }
+}
+
+void RiptideEchosounder::MSALT_handler(const nmea::NMEASentence& n) {
+    if (n.parameters.size() == 3 and n.parameters[0] == "DATA") {
+        RCLCPP_DEBUG(this->get_logger(), "Got DATA: %f, %f", raw_distance, processed_distance);
+
+        double raw_distance = std::stod(fields[2]);
+        double processed_distance = std::stod(fields[3]);
+
+        publish_range(raw_publisher_, raw_distance);
+        publish_range(processed_publisher_, processed_distance);
     }
 }
 
