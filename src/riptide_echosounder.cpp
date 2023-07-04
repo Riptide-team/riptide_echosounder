@@ -28,7 +28,7 @@ RiptideEchosounder::RiptideEchosounder() : Node("riptide_echosounder") {
     this->declare_parameter("lockout", "0.5"); // min 0.5
 
     // Getting serial parameters
-    port_ = this->get_parameter("port").as_string();
+    port_ = this->get_parameter("port").as_int();
     baud_rate_ = static_cast<unsigned int>(this->get_parameter("baud_rate").as_int());
 
     // Creating driver
