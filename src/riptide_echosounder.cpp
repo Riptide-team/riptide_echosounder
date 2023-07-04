@@ -70,8 +70,8 @@ RiptideEchosounder::RiptideEchosounder() : Node("riptide_echosounder") {
 
     // TODO MSALT,TRIGGER,0 at the destruction of the node
 
-    raw_publisher_ = this->create_publisher<sensor_msgs::msg::Range>("raw_altitude", 10);
-    processed_publisher_ = this->create_publisher<sensor_msgs::msg::Range>("processed_altitude", 10);
+    raw_publisher_ = this->create_publisher<sensor_msgs::msg::Range>("~/raw_altitude", 10);
+    processed_publisher_ = this->create_publisher<sensor_msgs::msg::Range>("~/processed_altitude", 10);
 }
 
 void RiptideEchosounder::configure_echosounder() {
@@ -154,41 +154,6 @@ void RiptideEchosounder::read_callback(const rtac::asio::SerialStream::ErrorCode
             );
         }
     }
-
-        // SeaScanEcho::Reply s(corrected);
-
-        // for (std::size_t i=0; i<count; ++i) {
-        //     std::cout << "[" << int((read_buffer_.c_str())[i]) <<"]";
-        // }
-        // std::cout << std::endl;
-
-        // for (std::size_t i=0; i<count; ++i) {
-        //     std::cout << "[" << int((corrected.c_str())[i]) <<"]";
-        // }
-        // std::cout << std::endl;
-
-
-
-
-        // if (s.Valid()) {
-        //     std::vector<std::string> fields = s.Fields();
-        //     if ((fields.size() == 4) and (fields[0] == "$MSALT") and (fields[1] == "DATA")) {
-        //         double raw_distance = std::stod(fields[2]);
-        //         double processed_distance = std::stod(fields[3]);
-
-        //         publish_range(raw_publisher_, raw_distance);
-        //         publish_range(processed_publisher_, processed_distance);
-        //         RCLCPP_DEBUG(this->get_logger(), "Gathered distances: %f, %f", raw_distance, processed_distance);
-        //     }
-        //     RCLCPP_DEBUG(this->get_logger(), "Valid NMEA sentence");
-        // }
-        // else {
-        //     RCLCPP_WARN(this->get_logger(), "Invalid NMEA sentance");
-        // }
-    // }
-    // catch (...) {
-    //     RCLCPP_WARN(this->get_logger(), "Error while parsing reply %s", corrected.c_str());
-    // }
 
     read_buffer_ = std::string(1024, '\0');
     // Relaunching an async read
