@@ -224,7 +224,7 @@ void RiptideEchosounder::publish_range(rclcpp::Publisher<sensor_msgs::msg::Range
 
     // Filling the message
     range.field_of_view = 0.2;
-    range.min_range = std::strod(this->get_parameter("lockout").as_string());
+    range.min_range = std::stod(this->get_parameter("lockout").as_string());
     range.max_range = std::stod(this->get_parameter("range").as_string());
     range.range = distance;
 
